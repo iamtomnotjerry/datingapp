@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:datingapp/firebase_options.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -69,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
 
                           if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-                            showToast('Please fill in all the fields');
+                            showSnackBar('Please fill in all the fields');
                           } else {
                             await loginUser(
                               _emailController.text,
@@ -94,9 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: isLoading
                       ? null
                       : () {
-                          // Add navigation to the "Forgot your password?" screen
-                          // For example: Navigator.pushNamed(context, '/forgot_password');
-                          showToast('Navigate to the "Forgot your password?" screen');
+                          showSnackBar('Navigate to the "Forgot your password?" screen');
                         },
                   child: Text('Forgot your password?'),
                 ),
@@ -109,8 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: isLoading
                           ? null
                           : () {
-                              // Add navigation to the "Register" screen
-                              // For example: Navigator.pushNamed(context, '/register');
                               Navigator.pushNamed(context, '/register');
                             },
                       child: Text('Register'),
@@ -125,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.black.withOpacity(0.5),
               child: Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(const Color.fromRGBO(252, 228, 236, 1)), // Set the color to pink
+                  valueColor: AlwaysStoppedAnimation<Color>(const Color.fromRGBO(252, 228, 236, 1)),
                 ),
               ),
             ),
@@ -134,13 +129,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 
@@ -151,25 +146,23 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
       Navigator.pushReplacementNamed(context, '/HomeScreen');
-
     } catch (e) {
       print('Error during login: $e');
 
       if (e is FirebaseAuthException) {
-        
         switch (e.code) {
           case 'invalid-email':
-            showToast('User not found. Please check your email or register.');
+            showSnackBar('User not found. Please check your email or register.');
             break;
           case 'invalid-credential':
-            showToast('User not found or Wrong password');
+            showSnackBar('User not found or Wrong password');
             break;
           // Handle other error cases as needed
           default:
-            showToast('Login failed. Please try again.');
+            showSnackBar('Login failed. Please try again.');
         }
       } else {
-        showToast('Login failed. Please try again.');
+        showSnackBar('Login failed. Please try again.');
       }
     }
   }

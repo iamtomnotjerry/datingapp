@@ -10,21 +10,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
-    print(currentUser?.emailVerified);
+
     // Use Future.delayed to schedule the navigation after the build has completed
-    if (currentUser == null){
-      Future.delayed(Duration.zero, () {
-        // If the current user is null or email is not verified, navigate to the login screen
+    Future.delayed(Duration.zero, () {
+      // If the current user is null, navigate to the login screen
+      if (currentUser == null) {
         Navigator.pushReplacementNamed(context, '/login');
-      });
-    }
-    
-     if (!currentUser!.emailVerified) {
-      Future.delayed(Duration.zero, () {
-        // If the current user is null or email is not verified, navigate to the login screen
-        Navigator.pushReplacementNamed(context, '/verify');
-      });
-    }
+      } else {
+        // If the email is not verified, navigate to the verification screen
+        // if (!currentUser.emailVerified) {
+        //   Navigator.pushReplacementNamed(context, '/verify');
+        // }
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Center(
-        child: Text('Welcome to the Home Page!'),
+        child: Text('Hello Word'),
       ),
     );
   }
