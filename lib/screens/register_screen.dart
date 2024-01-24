@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:datingapp/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -86,7 +85,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  
                   onPressed: isLoading
                       ? null
                       : () async {
@@ -102,33 +100,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _emailController.text.isEmpty ||
                               _passwordController.text.isEmpty ||
                               _confirmPasswordController.text.isEmpty) {
-                            showToast('Please fill in all the fields');
+                            showSnackBar('Please fill in all the fields');
                           } else if (!isValidEmail(_emailController.text)) {
-                            showToast('Please enter a valid email address');
+                            showSnackBar('Please enter a valid email address');
                           } else if (!isGmUitEmail(_emailController.text)) {
-                            showToast('Email must be from @gm.uit.edu.vn domain');
+                            showSnackBar('Email must be from @gm.uit.edu.vn domain');
                           } else if (_passwordController.text != _confirmPasswordController.text) {
-                            showToast('Passwords do not match');
+                            showSnackBar('Passwords do not match');
                           } else {
-                            
-                              await registerUser(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                            
+                            await registerUser(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
                           }
 
                           setState(() {
                             isLoading = false;
                           });
                         },
-                  child: Text('Register',
+                  child: Text(
+                    'Register',
                     style: TextStyle(color: Colors.black),
                   ),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(248, 187, 208, 1)),
                   ),
-                  
                 ),
               ],
             ),
@@ -153,44 +149,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return email.endsWith('@gmail.com');
   }
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+      ),
     );
   }
-
-  
 
   Future<void> registerUser(String email, String password) async {
-  try {
-    final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    Navigator.pushReplacementNamed(context, '/login');
+    try {
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.pushReplacementNamed(context, '/login');
 
-    print('User registered: ${userCredential.user?.uid}');
-  } catch (e) {
-  print('Error during registration: $e');
+      print('User registered: ${userCredential.user?.uid}');
+    } catch (e) {
+      print('Error during registration: $e');
 
-  if (e is FirebaseAuthException) {
-    switch (e.code) {
-      case 'email-already-in-use':
-        showToast('This email address is already in use. Please use a different email.');
-        break;
-      case 'weak-password':
-        showToast('The password is too weak. Please choose a stronger password.');
-        break;
-      // Handle other error cases as needed
-      default:
-        showToast('Registration failed. Please try again.');
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'email-already-in-use':
+            showSnackBar('This email address is already in use. Please use a different email.');
+            break;
+          case 'weak-password':
+            showSnackBar('The password is too weak. Please choose a stronger password.');
+            break;
+          // Handle other error cases as needed
+          default:
+            showSnackBar('Registration failed. Please try again.');
+        }
+      } else {
+        showSnackBar('Registration failed. Please try again.');
+      }
     }
-  } else {
-    showToast('Registration failed. Please try again.');
   }
 }
-}}
