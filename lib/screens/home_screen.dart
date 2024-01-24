@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:datingapp/widgets/map_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -38,11 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
               // After signing out, navigate to the login screen
               Navigator.pushReplacementNamed(context, '/login');
             },
-          ),
+          ),  
         ],
       ),
       body: Center(
-        child: Text('Hello Word'),
+        child: MapSample(),
       ),
     );
   }
