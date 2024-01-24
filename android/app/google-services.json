@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "803415926913",
+    "project_id": "dating-university-app",
+    "storage_bucket": "dating-university-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803415926913:android:434e08b646dd73bd15c580",
+        "android_client_info": {
+          "package_name": "com.example.datingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdUg0I-NcDYbVRX9HO5K8j_sQkGXFOcsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
