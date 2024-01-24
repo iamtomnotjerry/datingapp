@@ -150,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool isGmUitEmail(String email) {
-    return email.endsWith('@gm.uit.edu.vn');
+    return email.endsWith('@gmail.com');
   }
 
   void showToast(String message) {
@@ -171,6 +171,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: email,
       password: password,
     );
+    Navigator.pushReplacementNamed(context, '/login');
+
     print('User registered: ${userCredential.user?.uid}');
   } catch (e) {
   print('Error during registration: $e');

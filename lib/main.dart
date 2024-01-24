@@ -2,6 +2,7 @@ import 'package:datingapp/screens/home_screen.dart';
 import 'package:datingapp/screens/login_screen.dart';
 import 'package:datingapp/screens/register_screen.dart';
 import 'package:datingapp/screens/splash_screen.dart'; // Import the splash screen
+import 'package:datingapp/screens/verify_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:datingapp/firebase_options.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/HomeScreen': (context) => HomeScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
+        '/verify': (context) => VerifyCodeScreen(),
       },
     );
   }
