@@ -15,7 +15,7 @@ class MapSampleState extends State<MapSample> {
       Completer<GoogleMapController>();
 
   CameraPosition _currentCameraPosition = CameraPosition(
-    target: LatLng(10, 100), // Default to HCM City coordinates
+  target: LatLng(10.7769, 106.7009), // Coordinates for Ho Chi Minh City
     zoom: 10.0, // Adjust the zoom level
   );
 
@@ -29,10 +29,11 @@ class MapSampleState extends State<MapSample> {
 
   Future<void> _getLocation() async {
     try {
+      
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        desiredAccuracy: LocationAccuracy.best,
       );
-
+      print(position);
       if (mounted) {
         setState(() {
           _currentCameraPosition = CameraPosition(

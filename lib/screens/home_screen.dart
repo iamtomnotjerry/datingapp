@@ -21,9 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushReplacementNamed(context, '/login');
       } else {
         // If the email is not verified, navigate to the verification screen
-        // if (!currentUser.emailVerified) {
-        //   Navigator.pushReplacementNamed(context, '/verify');
-        // }
+        if (!currentUser.emailVerified) {
+          Navigator.pushReplacementNamed(context, '/verify');
+        }
       }
     });
 
