@@ -10,22 +10,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<MapSampleState> mapKey = GlobalKey<MapSampleState>();
+
   @override
-  Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
+  void initState() {
+    super.initState();
 
     // Use Future.delayed to schedule the navigation after the build has completed
     Future.delayed(Duration.zero, () {
-      // If the current user is null, navigate to the login screen
-      if (currentUser == null) {
-        Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        // If the email is not verified, navigate to the verification screen
-        if (!currentUser.emailVerified) {
-          Navigator.pushReplacementNamed(context, '/verify');
-        }
-      }
+      checkUserAndNavigate();
     });
+  }
+
+  void checkUserAndNavigate() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    // If the current user is null, navigate to the login screen
+    if (currentUser == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      // If the email is not verified, navigate to the verification screen
+      if (!currentUser.emailVerified) {
+        Navigator.pushReplacementNamed(context, '/verify');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,12 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
               // After signing out, navigate to the login screen
               Navigator.pushReplacementNamed(context, '/login');
             },
-          ),  
+          ),
         ],
       ),
-      body: Center(
-        child: MapSample(),
-      ),
+      body: currentUser == null || !currentUser.emailVerified
+          ? Center(
+              child: Text('Hello, World!'),
+            )
+          : Center(
+              child: MapSample(key: mapKey),
+            ),
     );
   }
 }

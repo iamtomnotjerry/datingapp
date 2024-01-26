@@ -23,7 +23,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Please enter the verification code sent to ${user?.email}',
+              'Please verify the email ${user?.email}',
               style: TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
@@ -51,7 +51,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   Future<void> verifyEmail(User? user) async {
     await user?.reload();
-
+    user = FirebaseAuth.instance.currentUser;
     if (user?.emailVerified == true) {
       Navigator.pushReplacementNamed(context, '/HomeScreen');
     } else {

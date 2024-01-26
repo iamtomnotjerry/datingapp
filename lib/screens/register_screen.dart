@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:datingapp/firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -111,6 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             await registerUser(
                               _emailController.text,
                               _passwordController.text,
+                              _usernameController.text
                             );
                           }
 
@@ -146,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool isGmUitEmail(String email) {
-    return email.endsWith('@gmail.com');
+    return email.endsWith('@gm.uit.edu.vn');
   }
 
   void showSnackBar(String message) {
@@ -159,33 +161,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<void> registerUser(String email, String password) async {
-    try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Navigator.pushReplacementNamed(context, '/login');
+  Future<void> registerUser(String email, String password, String username) async {
+  try {
+    // Create user in FirebaseAuth
+    final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      print('User registered: ${userCredential.user?.uid}');
-    } catch (e) {
-      print('Error during registration: $e');
+    // Create user document in Firestore
+    await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+      'email': email,
+      'username': username,
+    });
 
-      if (e is FirebaseAuthException) {
-        switch (e.code) {
-          case 'email-already-in-use':
-            showSnackBar('This email address is already in use. Please use a different email.');
-            break;
-          case 'weak-password':
-            showSnackBar('The password is too weak. Please choose a stronger password.');
-            break;
-          // Handle other error cases as needed
-          default:
-            showSnackBar('Registration failed. Please try again.');
-        }
-      } else {
-        showSnackBar('Registration failed. Please try again.');
+    // Redirect to login screen
+    Navigator.pushReplacementNamed(context, '/login');
+
+    print('User registered: ${userCredential.user?.uid}');
+  } catch (e) {
+    print('Error during registration: $e');
+
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          showSnackBar('This email address is already in use. Please use a different email.');
+          break;
+        case 'weak-password':
+          showSnackBar('The password is too weak. Please choose a stronger password.');
+          break;
+        // Handle other error cases as needed
+        default:
+          showSnackBar('Registration failed. Please try again.');
       }
+    } else {
+      showSnackBar('Registration failed. Please try again.');
     }
   }
-}
+}}
